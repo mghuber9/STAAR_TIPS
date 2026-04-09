@@ -1,5 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 3 - STAAR Story Challenge</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    h1 { color: #facc15; }
+    h2 { color: #93c5fd; }
+
+    .tip-box {
+      background: rgba(250, 204, 21, 0.12);
+      border-left: 6px solid #facc15;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    .choices label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 18px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .correct { background: rgba(34,197,94,0.2); }
+    .incorrect { background: rgba(239,68,68,0.2); }
+
+    .ending {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(147,197,253,0.2);
+      border-left: 5px solid #93c5fd;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- STORY -->
+  <div class="card">
+    <h1>Day 3: The Camera Turns...</h1>
+
+    <p>The camera slowly rotates toward you.</p>
+    <p>A red light blinks once.</p>
+    <p>Then twice.</p>
+
+    <p><strong>"Most students lose points even when they could figure it out."</strong></p>
+
+    <p>Another message appears:</p>
+
+    <p><strong>"They don’t eliminate wrong answers."</strong></p>
+
+    <p>The red light stays on.</p>
+
+    <p><strong>"Learn this now."</strong></p>
+  </div>
+
+  <!-- TIP -->
+  <div class="card">
+    <h2>🔥 STAAR Tip #2</h2>
+
+    <div class="tip-box">
+      If you are unsure, start by <strong>eliminating answers you know are wrong</strong>.
+      Even removing 1–2 choices greatly improves your chances.
+    </div>
+
+    <p style="margin-top:15px;">
+      If you eliminate 2 wrong answers out of 4, how many choices are left?
+    </p>
+
+    <form>
+      <div class="choices">
+        <label><input type="radio" name="answer" value="A"> A) 1</label>
+        <label><input type="radio" name="answer" value="B"> B) 2</label>
+        <label><input type="radio" name="answer" value="C"> C) 3</label>
+        <label><input type="radio" name="answer" value="D"> D) 4</label>
+      </div>
+
+      <button type="button" onclick="checkAnswer()">Submit</button>
+    </form>
+
+    <div id="correct" class="feedback correct">
+      ✅ Correct. You removed 2 wrong answers, so 2 remain.
+    </div>
+
+    <div id="incorrect" class="feedback incorrect">
+      ❌ Try again. Start with 4 choices and remove 2.
+    </div>
+
+    <div id="ending" class="ending">
+      The red light turns off.<br><br>
+
+      <em>"Better."</em><br><br>
+
+      <em>"You are starting to think differently."</em><br><br>
+
+      A panel on the wall begins to open...<br><br>
+
+      Check your next message for Day 4.
+    </div>
+
+  </div>
+
+</div>
+
 <script>
-  const trackerUrl = "https://script.google.com/macros/s/AKfycbxNAkksAoc2iJ9oxzqgeL0q4ddFWsdApEJz1dzkeqPCfrMN9cyhRqh322-IaQ30voo/exec";
+  const trackerUrl = "https://script.google.com/macros/s/AKfycbwLP4Y6iHhJnzcr4Nsf6Y-m_NurQNA4Xzxdpm7-SITQfpdnJdcvg9MfKwCUvSWOViNd/exec";
   const params = new URLSearchParams(window.location.search);
   const source = params.get("source") || "unknown";
 
@@ -7,49 +157,43 @@
     const pageName = "day3";
     const currentUrl = window.location.href;
 
-    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=${encodeURIComponent("visit")}&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`)
-      .then(response => response.text())
-      .then(data => console.log("Visit logged:", data))
-      .catch(error => console.log("Tracking error:", error));
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=visit&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`);
   }
 
   function logCompletion() {
     const pageName = "day3";
     const currentUrl = window.location.href;
 
-    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=${encodeURIComponent("complete")}&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`)
-      .then(response => response.text())
-      .then(data => console.log("Completion logged:", data))
-      .catch(error => console.log("Tracking error:", error));
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=complete&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`);
   }
 
   window.addEventListener("load", logVisit);
 
   function checkAnswer() {
     const selected = document.querySelector('input[name="answer"]:checked');
-    const correctFeedback = document.getElementById("correctFeedback");
-    const incorrectFeedback = document.getElementById("incorrectFeedback");
+    const correct = document.getElementById("correct");
+    const incorrect = document.getElementById("incorrect");
     const ending = document.getElementById("ending");
 
-    correctFeedback.style.display = "none";
-    incorrectFeedback.style.display = "none";
+    correct.style.display = "none";
+    incorrect.style.display = "none";
 
     if (!selected) {
-      incorrectFeedback.textContent = "❌ Please choose an answer first.";
-      incorrectFeedback.style.display = "block";
-      ending.style.display = "none";
+      incorrect.textContent = "❌ Select an answer first.";
+      incorrect.style.display = "block";
       return;
     }
 
     if (selected.value === "B") {
-      correctFeedback.textContent = "✅ Correct. If you eliminate 2 wrong choices out of 4, you have 2 choices left.";
-      correctFeedback.style.display = "block";
+      correct.style.display = "block";
       ending.style.display = "block";
       logCompletion();
     } else {
-      incorrectFeedback.textContent = "❌ Not quite. Start with 4 choices and take away the 2 wrong ones.";
-      incorrectFeedback.style.display = "block";
+      incorrect.style.display = "block";
       ending.style.display = "none";
     }
   }
 </script>
+
+</body>
+</html>
