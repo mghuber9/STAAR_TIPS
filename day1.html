@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 1 - STAAR Story Challenge</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 24px;
+    }
+
+    h1, h2 {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #facc15;
+    }
+
+    h2 {
+      color: #93c5fd;
+    }
+
+    .story {
+      font-size: 1.1rem;
+    }
+
+    .tip-box {
+      background: rgba(250, 204, 21, 0.12);
+      border-left: 6px solid #facc15;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    .question {
+      margin-top: 20px;
+      font-size: 1.05rem;
+      font-weight: bold;
+    }
+
+    .choices label {
+      display: block;
+      background: rgba(255, 255, 255, 0.07);
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin: 10px 0;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: 0.2s;
+    }
+
+    .choices label:hover {
+      border-color: #93c5fd;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+      transform: scale(1.1);
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .feedback {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      display: none;
+    }
+
+    .correct {
+      background: rgba(34, 197, 94, 0.18);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      color: #bbf7d0;
+    }
+
+    .incorrect {
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      color: #fecaca;
+    }
+
+    .ending {
+      display: none;
+      margin-top: 20px;
+      background: rgba(147, 197, 253, 0.12);
+      border-left: 6px solid #93c5fd;
+      padding: 18px;
+      border-radius: 10px;
+      font-size: 1.05rem;
+    }
+
+    .small-note {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="card">
+      <h1>Day 1: You Weren’t Supposed to See This...</h1>
+      <div class="story">
+        <p>You open your computer...</p>
+        <p>...but something is different.</p>
+        <p>The screen flashes:</p>
+        <p><strong>"STUDENT DETECTED."</strong></p>
+        <p>A second message appears:</p>
+        <p><strong>"Most students miss easy points because they forget one simple strategy."</strong></p>
+        <p>The lights flicker.</p>
+        <p>You have one chance to learn the tip before the system locks you out.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔥 STAAR Tip #1</h2>
+      <div class="tip-box">
+        If you get stuck on a problem, try <strong>plugging in simple numbers</strong> like
+        <strong>0</strong>, <strong>1</strong>, or <strong>2</strong>.  
+        These numbers are fast to use and can help you eliminate wrong answers.
+      </div>
+
+      <div class="question">
+        Which number is usually one of the BEST numbers to plug in first?
+      </div>
+
+      <form id="quizForm">
+        <div class="choices">
+          <label><input type="radio" name="answer" value="A"> A) 147</label>
+          <label><input type="radio" name="answer" value="B"> B) 1</label>
+          <label><input type="radio" name="answer" value="C"> C) 999</label>
+          <label><input type="radio" name="answer" value="D"> D) 243</label>
+        </div>
+
+        <button type="button" onclick="checkAnswer()">Submit Answer</button>
+      </form>
+
+      <div id="correctFeedback" class="feedback correct">
+        ✅ Correct. Starting with 1 is smart because it is quick and easy to work with.
+      </div>
+
+      <div id="incorrectFeedback" class="feedback incorrect">
+        ❌ Not quite. Remember: the tip said to start with simple numbers like 0, 1, or 2.
+      </div>
+
+      <div id="ending" class="ending">
+        <strong>The screen pauses.</strong><br><br>
+        A new message appears:<br><br>
+        <em>"You may be more prepared than the others."</em><br><br>
+        A locked door icon on the screen suddenly turns green.<br><br>
+        It slides open just enough for you to see inside...<br><br>
+        <strong>There is another room. And someone is already in it.</strong><br><br>
+        Check your next message to find out what happens on <strong>Day 2</strong>.
+      </div>
+
+      <div class="small-note">
+        You only need one correct answer to unlock the ending.
+      </div>
+    </div>
+
+    <div class="footer">
+      STAAR Story Challenge - Day 1
+    </div>
+  </div>
+
+  <script>
+    function checkAnswer() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      const correctFeedback = document.getElementById("correctFeedback");
+      const incorrectFeedback = document.getElementById("incorrectFeedback");
+      const ending = document.getElementById("ending");
+
+      correctFeedback.style.display = "none";
+      incorrectFeedback.style.display = "none";
+
+      if (!selected) {
+        incorrectFeedback.textContent = "❌ Please choose an answer first.";
+        incorrectFeedback.style.display = "block";
+        ending.style.display = "none";
+        return;
+      }
+
+      if (selected.value === "B") {
+        correctFeedback.textContent = "✅ Correct. Starting with 1 is smart because it is quick and easy to work with.";
+        correctFeedback.style.display = "block";
+        ending.style.display = "block";
+      } else {
+        incorrectFeedback.textContent = "❌ Not quite. Remember: the tip said to start with simple numbers like 0, 1, or 2.";
+        incorrectFeedback.style.display = "block";
+        ending.style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>
