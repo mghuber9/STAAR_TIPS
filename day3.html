@@ -1,0 +1,55 @@
+<script>
+  const trackerUrl = "https://script.google.com/macros/s/AKfycbxNAkksAoc2iJ9oxzqgeL0q4ddFWsdApEJz1dzkeqPCfrMN9cyhRqh322-IaQ30voo/exec";
+  const params = new URLSearchParams(window.location.search);
+  const source = params.get("source") || "unknown";
+
+  function logVisit() {
+    const pageName = "day3";
+    const currentUrl = window.location.href;
+
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=${encodeURIComponent("visit")}&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`)
+      .then(response => response.text())
+      .then(data => console.log("Visit logged:", data))
+      .catch(error => console.log("Tracking error:", error));
+  }
+
+  function logCompletion() {
+    const pageName = "day3";
+    const currentUrl = window.location.href;
+
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=${encodeURIComponent("complete")}&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`)
+      .then(response => response.text())
+      .then(data => console.log("Completion logged:", data))
+      .catch(error => console.log("Tracking error:", error));
+  }
+
+  window.addEventListener("load", logVisit);
+
+  function checkAnswer() {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    const correctFeedback = document.getElementById("correctFeedback");
+    const incorrectFeedback = document.getElementById("incorrectFeedback");
+    const ending = document.getElementById("ending");
+
+    correctFeedback.style.display = "none";
+    incorrectFeedback.style.display = "none";
+
+    if (!selected) {
+      incorrectFeedback.textContent = "❌ Please choose an answer first.";
+      incorrectFeedback.style.display = "block";
+      ending.style.display = "none";
+      return;
+    }
+
+    if (selected.value === "B") {
+      correctFeedback.textContent = "✅ Correct. If you eliminate 2 wrong choices out of 4, you have 2 choices left.";
+      correctFeedback.style.display = "block";
+      ending.style.display = "block";
+      logCompletion();
+    } else {
+      incorrectFeedback.textContent = "❌ Not quite. Start with 4 choices and take away the 2 wrong ones.";
+      incorrectFeedback.style.display = "block";
+      ending.style.display = "none";
+    }
+  }
+</script>
