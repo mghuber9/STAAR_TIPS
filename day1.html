@@ -207,33 +207,47 @@
     </div>
   </div>
 
-  <script>
-    function checkAnswer() {
-      const selected = document.querySelector('input[name="answer"]:checked');
-      const correctFeedback = document.getElementById("correctFeedback");
-      const incorrectFeedback = document.getElementById("incorrectFeedback");
-      const ending = document.getElementById("ending");
+<script>
+  const trackerUrl = "https://script.google.com/macros/s/AKfycbxNAkksAoc2iJ9oxzqgeL0q4ddFWsdApEJz1dzkeqPCfrMN9cyhRqh322-IaQ30voo/exec";
 
-      correctFeedback.style.display = "none";
-      incorrectFeedback.style.display = "none";
+  function logVisit() {
+    const pageName = "day1";
+    const currentUrl = window.location.href;
 
-      if (!selected) {
-        incorrectFeedback.textContent = "❌ Please choose an answer first.";
-        incorrectFeedback.style.display = "block";
-        ending.style.display = "none";
-        return;
-      }
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&url=${encodeURIComponent(currentUrl)}`)
+      .then(response => response.text())
+      .then(data => console.log("Visit logged:", data))
+      .catch(error => console.log("Tracking error:", error));
+  }
 
-      if (selected.value === "B") {
-        correctFeedback.textContent = "✅ Correct. Starting with 1 is smart because it is quick and easy to work with.";
-        correctFeedback.style.display = "block";
-        ending.style.display = "block";
-      } else {
-        incorrectFeedback.textContent = "❌ Not quite. Remember: the tip said to start with simple numbers like 0, 1, or 2.";
-        incorrectFeedback.style.display = "block";
-        ending.style.display = "none";
-      }
+  window.addEventListener("load", logVisit);
+
+  function checkAnswer() {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    const correctFeedback = document.getElementById("correctFeedback");
+    const incorrectFeedback = document.getElementById("incorrectFeedback");
+    const ending = document.getElementById("ending");
+
+    correctFeedback.style.display = "none";
+    incorrectFeedback.style.display = "none";
+
+    if (!selected) {
+      incorrectFeedback.textContent = "❌ Please choose an answer first.";
+      incorrectFeedback.style.display = "block";
+      ending.style.display = "none";
+      return;
     }
-  </script>
+
+    if (selected.value === "B") {
+      correctFeedback.textContent = "✅ Correct. Starting with 1 is smart because it is quick and easy to work with.";
+      correctFeedback.style.display = "block";
+      ending.style.display = "block";
+    } else {
+      incorrectFeedback.textContent = "❌ Not quite. Remember: the tip said to start with simple numbers like 0, 1, or 2.";
+      incorrectFeedback.style.display = "block";
+      ending.style.display = "none";
+    }
+  }
+</script>
 </body>
 </html>
