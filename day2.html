@@ -148,15 +148,23 @@
 
 <script>
 const trackerUrl = "https://script.google.com/macros/s/AKfycbxNAkksAoc2iJ9oxzqgeL0q4ddFWsdApEJz1dzkeqPCfrMN9cyhRqh322-IaQ30voo/exec";
+const params = new URLSearchParams(window.location.search);
+const source = params.get("source") || "unknown";  
 
 function logVisit() {
-  fetch(`${trackerUrl}?page=day2`);
-}
+  const pageName = "day2";
+  const currentUrl = window.location.href;
 
+  fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=visit&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`);
+}
+  
 function logCompletion() {
-  fetch(`${trackerUrl}?page=day2&event=complete`);
-}
+  const pageName = "day2";
+  const currentUrl = window.location.href;
 
+  fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=complete&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`);
+}
+  
 window.addEventListener("load", logVisit);
 
 function showExample() {
