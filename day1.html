@@ -209,14 +209,26 @@
 
 <script>
   const trackerUrl = "https://script.google.com/macros/s/AKfycbxNAkksAoc2iJ9oxzqgeL0q4ddFWsdApEJz1dzkeqPCfrMN9cyhRqh322-IaQ30voo/exec";
+  const params = new URLSearchParams(window.location.search);
+  const source = params.get("source") || "unknown";
 
   function logVisit() {
     const pageName = "day1";
     const currentUrl = window.location.href;
 
-    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&url=${encodeURIComponent(currentUrl)}`)
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=${encodeURIComponent("visit")}&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`)
       .then(response => response.text())
       .then(data => console.log("Visit logged:", data))
+      .catch(error => console.log("Tracking error:", error));
+  }
+
+  function logCompletion() {
+    const pageName = "day1";
+    const currentUrl = window.location.href;
+
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=${encodeURIComponent("complete")}&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}`)
+      .then(response => response.text())
+      .then(data => console.log("Completion logged:", data))
       .catch(error => console.log("Tracking error:", error));
   }
 
@@ -242,6 +254,7 @@
       correctFeedback.textContent = "✅ Correct. Starting with 1 is smart because it is quick and easy to work with.";
       correctFeedback.style.display = "block";
       ending.style.display = "block";
+      logCompletion();
     } else {
       incorrectFeedback.textContent = "❌ Not quite. Remember: the tip said to start with simple numbers like 0, 1, or 2.";
       incorrectFeedback.style.display = "block";
