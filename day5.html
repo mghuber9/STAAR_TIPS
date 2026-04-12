@@ -94,22 +94,6 @@
       font-size: 15px;
     }
 
-    .name-input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin-top: 10px;
-      font-size: 16px;
-      box-sizing: border-box;
-    }
-
-    .save-note {
-      margin-top: 10px;
-      color: #cbd5e1;
-      font-size: 14px;
-    }
-
     .unlock-box {
       display: none;
       margin-top: 18px;
@@ -133,27 +117,6 @@
 <body>
 <div class="container">
 
-  <!-- OPTIONAL NAME -->
-  <div class="card">
-    <h2>Optional: Enter Your Name</h2>
-    <p style="margin-top: 0;">
-      This helps Mr. Huber see who is completing the daily practice.
-    </p>
-
-    <input
-      type="text"
-      id="studentName"
-      class="name-input"
-      placeholder="Type your name here..."
-    />
-
-    <button type="button" onclick="saveName()">Save Name</button>
-
-    <div class="save-note">
-      You only need to do this once on this device.
-    </div>
-  </div>
-
   <!-- STORY -->
   <div class="card">
     <h1>Day 5: The Console Glows...</h1>
@@ -172,7 +135,7 @@
 
     <p>The screen pauses.</p>
 
-    <p><strong>"Answer correctly... and you unlock the message."</strong></p>
+    <p><strong><span id="storyNameLine">"Answer correctly... and you unlock the message."</span></strong></p>
   </div>
 
   <!-- TIP -->
@@ -223,7 +186,7 @@
     </div>
 
     <div id="unlockBox" class="unlock-box">
-      🔓 Joke unlocked.
+      🔓 <span id="unlockNameLine">Joke unlocked.</span>
     </div>
 
     <div id="jokeBox" class="joke-box">
@@ -233,7 +196,7 @@
     </div>
 
     <div id="ending" class="ending">
-      The console flashes once.<br><br>
+      <span id="endingNameLine">The console flashes once.</span><br><br>
 
       <em>"Better."</em><br><br>
 
@@ -241,32 +204,54 @@
 
       Another light flickers on in the distance...<br><br>
 
-      Check your next message for Day 6.
+      <span id="nextMessageLine">Check your next message for Day 6.</span>
     </div>
   </div>
 
 </div>
 
 <script>
-  const trackerUrl = "https://script.google.com/macros/s/AKfycbzOMPVF0bd2mmOXY9he5xzpuNDuDzOyBsWtUtDvuRpJXmbXJOzZABN1ePNrznpVVHnA/exec";";
+  const trackerUrl = "https://script.google.com/macros/s/AKfycbzOMPVF0bd2mmOXY9he5xzpuNDuDzOyBsWtUtDvuRpJXmbXJOzZABN1ePNrznpVVHnA/exec";
   const params = new URLSearchParams(window.location.search);
   const source = params.get("source") || "unknown";
 
-  function saveName() {
-    const name = document.getElementById("studentName").value.trim();
-    localStorage.setItem("studentName", name);
-    alert("Name saved!");
-  }
+  function askForNameIfNeeded() {
+    let savedName = localStorage.getItem("studentName");
 
-  function loadName() {
-    const savedName = localStorage.getItem("studentName");
-    if (savedName) {
-      document.getElementById("studentName").value = savedName;
+    if (!savedName) {
+      const enteredName = prompt("What is your name? (optional)");
+      if (enteredName && enteredName.trim() !== "") {
+        savedName = enteredName.trim();
+        localStorage.setItem("studentName", savedName);
+      }
     }
+
+    updateNameText();
   }
 
   function getStudentName() {
     return localStorage.getItem("studentName") || "unknown";
+  }
+
+  function updateNameText() {
+    const storedName = localStorage.getItem("studentName");
+
+    const storyNameLine = document.getElementById("storyNameLine");
+    const unlockNameLine = document.getElementById("unlockNameLine");
+    const endingNameLine = document.getElementById("endingNameLine");
+    const nextMessageLine = document.getElementById("nextMessageLine");
+
+    if (storedName) {
+      storyNameLine.textContent = `"Answer correctly, ${storedName}... and you unlock the message."`;
+      unlockNameLine.textContent = `${storedName}, you unlocked the joke.`;
+      endingNameLine.textContent = `The console flashes once, ${storedName}.`;
+      nextMessageLine.textContent = `${storedName}, check your next message for Day 6.`;
+    } else {
+      storyNameLine.textContent = `"Answer correctly... and you unlock the message."`;
+      unlockNameLine.textContent = `Joke unlocked.`;
+      endingNameLine.textContent = `The console flashes once.`;
+      nextMessageLine.textContent = `Check your next message for Day 6.`;
+    }
   }
 
   function logVisit() {
@@ -286,7 +271,7 @@
   }
 
   window.addEventListener("load", function () {
-    loadName();
+    askForNameIfNeeded();
     logVisit();
   });
 
