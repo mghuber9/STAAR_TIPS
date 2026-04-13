@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 6 - STAAR Story Challenge</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    h1 { color: #facc15; }
+    h2 { color: #93c5fd; }
+
+    .tip-box {
+      background: rgba(250, 204, 21, 0.12);
+      border-left: 6px solid #facc15;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    .combo-box {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: rgba(147,197,253,0.14);
+      border-left: 6px solid #93c5fd;
+      border-radius: 10px;
+    }
+
+    .choices label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 18px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .correct { background: rgba(34,197,94,0.2); }
+    .incorrect { background: rgba(239,68,68,0.2); }
+
+    .ending {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(147,197,253,0.2);
+      border-left: 5px solid #93c5fd;
+      border-radius: 8px;
+    }
+
+    .equation-box {
+      margin-top: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      font-size: 22px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .hint {
+      margin-top: 12px;
+      color: #cbd5e1;
+      font-size: 15px;
+    }
+
+    .unlock-box {
+      display: none;
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      background: rgba(250, 204, 21, 0.12);
+      border-left: 6px solid #facc15;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="card">
+    <h1>Day 6: The Wall Starts Responding...</h1>
+
+    <p>The console from yesterday fades out.</p>
+    <p>For a second, everything is dark.</p>
+    <p>Then three symbols appear at once.</p>
+
+    <p><strong>✦ Eliminate what cannot work.</strong><br>
+    <strong>✦ Plug in when it helps.</strong><br>
+    <strong>✦ Check whether the answer makes sense.</strong></p>
+
+    <p>A new message scrolls across the screen:</p>
+
+    <p><strong><span id="storyNameLine">"The best test-takers do not use one strategy. They stack them."</span></strong></p>
+  </div>
+
+  <div class="card">
+    <h2>🔥 STAAR Tip #5</h2>
+
+    <div class="tip-box">
+      When a problem feels tricky, do <strong>more than one quick check</strong>.
+      You can eliminate bad answers, plug in a choice, and ask whether the result is reasonable.
+    </div>
+
+    <div class="combo-box">
+      <strong>Fast combo move:</strong><br>
+      1) Cross out choices that are obviously too big, too small, or the wrong sign.<br>
+      2) Plug in one of the remaining answers.<br>
+      3) Pick the one that actually works.
+    </div>
+
+    <p style="margin-top: 15px;">
+      🧮 <strong>Use Desmos to help if you're unsure:</strong><br>
+      <a href="https://www.desmos.com/testing/texas" target="_blank" rel="noopener" style="color:#93c5fd;">
+        Open Desmos Texas Testing Calculator
+      </a>
+    </p>
+
+    <p style="margin-top:15px;">
+      Which answer is the solution to this equation?
+    </p>
+
+    <div class="equation-box">
+      5x - 6 = 14
+    </div>
+
+    <p class="hint">
+      Hint: some choices can be eliminated before you even test them.
+    </p>
+
+    <form>
+      <div class="choices">
+        <label><input type="radio" name="answer" value="A"> A) 2</label>
+        <label><input type="radio" name="answer" value="B"> B) 4</label>
+        <label><input type="radio" name="answer" value="C"> C) 8</label>
+        <label><input type="radio" name="answer" value="D"> D) 20</label>
+      </div>
+
+      <button type="button" onclick="checkAnswer()">Submit</button>
+    </form>
+
+    <div id="correct" class="feedback correct">
+      ✅ Correct. <strong>x = 4</strong> because 5(4) - 6 = 20 - 6 = 14. The larger choices were not reasonable.
+    </div>
+
+    <div id="incorrect" class="feedback incorrect">
+      ❌ Try again. Eliminate the unreasonable choices, then plug in one of the remaining answers.
+    </div>
+
+    <div id="unlockBox" class="unlock-box">
+      🔓 <span id="unlockNameLine">System message unlocked.</span><br><br>
+      <em>"Now you are not just solving. You are checking as you go."</em>
+    </div>
+
+    <div id="ending" class="ending">
+      <span id="endingNameLine">A fourth section of the wall lights up.</span><br><br>
+
+      <em>"One strategy helps."</em><br><br>
+
+      <em>"Combined strategies win points."</em><br><br>
+
+      The path ahead looks a little clearer now...<br><br>
+
+      <span id="nextMessageLine">Check your next message for Day 7.</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const trackerUrl = "https://script.google.com/macros/s/AKfycbzOMPVF0bd2mmOXY9he5xzpuNDuDzOyBsWtUtDvuRpJXmbXJOzZABN1ePNrznpVVHnA/exec";
+  const params = new URLSearchParams(window.location.search);
+  const source = params.get("source") || "unknown";
+
+  function askForNameIfNeeded() {
+    let savedName = localStorage.getItem("studentName");
+
+    if (!savedName) {
+      const enteredName = prompt("What is your name? (optional)");
+      if (enteredName && enteredName.trim() !== "") {
+        savedName = enteredName.trim();
+        localStorage.setItem("studentName", savedName);
+      }
+    }
+
+    updateNameText();
+  }
+
+  function getStudentName() {
+    return localStorage.getItem("studentName") || "unknown";
+  }
+
+  function updateNameText() {
+    const storedName = localStorage.getItem("studentName");
+
+    const storyNameLine = document.getElementById("storyNameLine");
+    const unlockNameLine = document.getElementById("unlockNameLine");
+    const endingNameLine = document.getElementById("endingNameLine");
+    const nextMessageLine = document.getElementById("nextMessageLine");
+
+    if (storedName) {
+      storyNameLine.textContent = `"${storedName}, the best test-takers do not use one strategy. They stack them."`;
+      unlockNameLine.textContent = `${storedName}, system message unlocked.`;
+      endingNameLine.textContent = `A fourth section of the wall lights up, ${storedName}.`;
+      nextMessageLine.textContent = `${storedName}, check your next message for Day 7.`;
+    } else {
+      storyNameLine.textContent = `"The best test-takers do not use one strategy. They stack them."`;
+      unlockNameLine.textContent = `System message unlocked.`;
+      endingNameLine.textContent = `A fourth section of the wall lights up.`;
+      nextMessageLine.textContent = `Check your next message for Day 7.`;
+    }
+  }
+
+  function logVisit() {
+    const pageName = "day6";
+    const currentUrl = window.location.href;
+    const name = getStudentName();
+
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=visit&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}&name=${encodeURIComponent(name)}`);
+  }
+
+  function logCompletion() {
+    const pageName = "day6";
+    const currentUrl = window.location.href;
+    const name = getStudentName();
+
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=complete&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}&name=${encodeURIComponent(name)}`);
+  }
+
+  window.addEventListener("load", function () {
+    askForNameIfNeeded();
+    logVisit();
+  });
+
+  function checkAnswer() {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    const correct = document.getElementById("correct");
+    const incorrect = document.getElementById("incorrect");
+    const unlockBox = document.getElementById("unlockBox");
+    const ending = document.getElementById("ending");
+
+    correct.style.display = "none";
+    incorrect.style.display = "none";
+    unlockBox.style.display = "none";
+    ending.style.display = "none";
+
+    if (!selected) {
+      incorrect.textContent = "❌ Select an answer first.";
+      incorrect.style.display = "block";
+      return;
+    }
+
+    if (selected.value === "B") {
+      correct.style.display = "block";
+      unlockBox.style.display = "block";
+      ending.style.display = "block";
+      logCompletion();
+    } else {
+      incorrect.textContent = "❌ Try again. Eliminate the unreasonable choices, then plug in one of the remaining answers.";
+      incorrect.style.display = "block";
+    }
+  }
+</script>
+
+</body>
+</html>
