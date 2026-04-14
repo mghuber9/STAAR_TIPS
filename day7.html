@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 7 - STAAR Story Challenge</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #0f172a, #1e293b);
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    h1 { color: #facc15; }
+    h2 { color: #93c5fd; }
+
+    .tip-box {
+      background: rgba(250, 204, 21, 0.12);
+      border-left: 6px solid #facc15;
+      padding: 16px;
+      border-radius: 10px;
+      margin-top: 16px;
+    }
+
+    .combo-box {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: rgba(147,197,253,0.14);
+      border-left: 6px solid #93c5fd;
+      border-radius: 10px;
+    }
+
+    .question-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+    }
+
+    .equation-box {
+      margin-top: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      font-size: 22px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .choices label {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 18px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    .correct { background: rgba(34,197,94,0.2); }
+    .incorrect { background: rgba(239,68,68,0.2); }
+
+    .unlock-box {
+      display: none;
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 10px;
+      background: rgba(250, 204, 21, 0.12);
+      border-left: 6px solid #facc15;
+    }
+
+    .ending {
+      display: none;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(147,197,253,0.2);
+      border-left: 5px solid #93c5fd;
+      border-radius: 8px;
+    }
+
+    .hint {
+      margin-top: 12px;
+      color: #cbd5e1;
+      font-size: 15px;
+    }
+
+    .focus {
+      color: #facc15;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <div class="card">
+    <h1>Day 7: The Screen Splits in Two...</h1>
+
+    <p>The wall glows brighter than before.</p>
+    <p>Then the message from yesterday breaks apart into two lines.</p>
+
+    <p><strong>One line says:</strong> Solve it.<br>
+    <strong>The other says:</strong> Answer what was actually asked.</p>
+
+    <p>A new warning appears:</p>
+
+    <p><strong><span id="storyNameLine">"Some students know the math... and still miss the question."</span></strong></p>
+
+    <p>The room goes quiet.</p>
+
+    <p><em>This part of the system is checking something different now.</em></p>
+  </div>
+
+  <div class="card">
+    <h2>🔥 STAAR Tip #6</h2>
+
+    <div class="tip-box">
+      Before you click an answer, stop and ask:<br>
+      <span class="focus">What is the question actually asking for?</span>
+    </div>
+
+    <div class="combo-box">
+      <strong>Fast combo move:</strong><br>
+      1) Solve the math.<br>
+      2) Re-read the question.<br>
+      3) Make sure your answer matches what they asked for.
+    </div>
+
+    <p style="margin-top: 15px;">
+      🧮 <strong>Use Desmos to help if you're unsure:</strong><br>
+      <a href="https://www.desmos.com/testing/texas" target="_blank" rel="noopener" style="color:#93c5fd;">
+        Open Desmos Texas Testing Calculator
+      </a>
+    </p>
+
+    <div class="question-box">
+      <p>A number is multiplied by 3 and then 4 is added.</p>
+      <p>The result is 19.</p>
+      <p><strong>What is the number?</strong></p>
+    </div>
+
+    <div class="equation-box">
+      3x + 4 = 19
+    </div>
+
+    <p class="hint">
+      Careful: choose the value of the number, not just any number you see while solving.
+    </p>
+
+    <form>
+      <div class="choices">
+        <label><input type="radio" name="answer" value="A"> A) 3</label>
+        <label><input type="radio" name="answer" value="B"> B) 5</label>
+        <label><input type="radio" name="answer" value="C"> C) 15</label>
+        <label><input type="radio" name="answer" value="D"> D) 19</label>
+      </div>
+
+      <button type="button" onclick="checkAnswer()">Submit</button>
+    </form>
+
+    <div id="correct" class="feedback correct">
+      ✅ Correct. The number is <strong>5</strong> because 3(5) + 4 = 19.
+    </div>
+
+    <div id="incorrect" class="feedback incorrect">
+      ❌ Try again. Solve it, then make sure you chose the number the question asked for.
+    </div>
+
+    <div id="unlockBox" class="unlock-box">
+      🔓 <span id="unlockNameLine">System message unlocked.</span><br><br>
+      <em>"Accuracy is not only solving. Accuracy is answering the right question."</em>
+    </div>
+
+    <div id="ending" class="ending">
+      <span id="endingNameLine">The wall hums softly.</span><br><br>
+
+      <em>"Now you are catching traps."</em><br><br>
+
+      <em>"Not just wrong math. Wrong choices."</em><br><br>
+
+      Another panel unlocks farther down the hall...<br><br>
+
+      <span id="nextMessageLine">Check your next message for Day 8.</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const trackerUrl = "https://script.google.com/macros/s/AKfycbzOMPVF0bd2mmOXY9he5xzpuNDuDzOyBsWtUtDvuRpJXmbXJOzZABN1ePNrznpVVHnA/exec";
+  const params = new URLSearchParams(window.location.search);
+  const source = params.get("source") || "unknown";
+
+  function askForNameIfNeeded() {
+    let savedName = localStorage.getItem("studentName");
+
+    if (!savedName) {
+      const enteredName = prompt("What is your name? (optional)");
+      if (enteredName && enteredName.trim() !== "") {
+        savedName = enteredName.trim();
+        localStorage.setItem("studentName", savedName);
+      }
+    }
+
+    updateNameText();
+  }
+
+  function getStudentName() {
+    return localStorage.getItem("studentName") || "unknown";
+  }
+
+  function updateNameText() {
+    const storedName = localStorage.getItem("studentName");
+
+    const storyNameLine = document.getElementById("storyNameLine");
+    const unlockNameLine = document.getElementById("unlockNameLine");
+    const endingNameLine = document.getElementById("endingNameLine");
+    const nextMessageLine = document.getElementById("nextMessageLine");
+
+    if (storedName) {
+      storyNameLine.textContent = `"${storedName}, some students know the math... and still miss the question."`;
+      unlockNameLine.textContent = `${storedName}, system message unlocked.`;
+      endingNameLine.textContent = `The wall hums softly, ${storedName}.`;
+      nextMessageLine.textContent = `${storedName}, check your next message for Day 8.`;
+    } else {
+      storyNameLine.textContent = `"Some students know the math... and still miss the question."`;
+      unlockNameLine.textContent = `System message unlocked.`;
+      endingNameLine.textContent = `The wall hums softly.`;
+      nextMessageLine.textContent = `Check your next message for Day 8.`;
+    }
+  }
+
+  function logVisit() {
+    const pageName = "day7";
+    const currentUrl = window.location.href;
+    const name = getStudentName();
+
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=visit&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}&name=${encodeURIComponent(name)}`);
+  }
+
+  function logCompletion() {
+    const pageName = "day7";
+    const currentUrl = window.location.href;
+    const name = getStudentName();
+
+    fetch(`${trackerUrl}?page=${encodeURIComponent(pageName)}&event=complete&source=${encodeURIComponent(source)}&url=${encodeURIComponent(currentUrl)}&name=${encodeURIComponent(name)}`);
+  }
+
+  window.addEventListener("load", function () {
+    askForNameIfNeeded();
+    logVisit();
+  });
+
+  function checkAnswer() {
+    const selected = document.querySelector('input[name="answer"]:checked');
+    const correct = document.getElementById("correct");
+    const incorrect = document.getElementById("incorrect");
+    const unlockBox = document.getElementById("unlockBox");
+    const ending = document.getElementById("ending");
+
+    correct.style.display = "none";
+    incorrect.style.display = "none";
+    unlockBox.style.display = "none";
+    ending.style.display = "none";
+
+    if (!selected) {
+      incorrect.textContent = "❌ Select an answer first.";
+      incorrect.style.display = "block";
+      return;
+    }
+
+    if (selected.value === "B") {
+      correct.style.display = "block";
+      unlockBox.style.display = "block";
+      ending.style.display = "block";
+      logCompletion();
+    } else {
+      incorrect.textContent = "❌ Try again. Solve it, then make sure you chose the number the question asked for.";
+      incorrect.style.display = "block";
+    }
+  }
+</script>
+
+</body>
+</html>
