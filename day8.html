@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAAR Daily Tips - Day 8</title>
+  <style>
+    :root {
+      --blue: #1c7ed6;
+      --dark-blue: #0b3d91;
+      --light-blue: #eef7ff;
+      --green: #2f9e44;
+      --light-green: #eefbf3;
+      --gold: #f59f00;
+      --gray: #6c757d;
+      --light-gray: #f5f7fa;
+      --border: #d9e2ec;
+      --shadow: 0 8px 24px rgba(11, 61, 145, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #f8fbff, #edf5ff);
+      color: #1f2933;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .hero {
+      background: white;
+      border: 3px solid var(--blue);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px 0;
+      color: var(--dark-blue);
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .hero p {
+      margin: 8px 0;
+      font-size: 1.05rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .status-bar {
+      margin-top: 14px;
+      background: var(--light-blue);
+      border: 2px solid #b6d4fe;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      color: var(--dark-blue);
+    }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .board-card,
+    .panel-card {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .board-card {
+      padding: 14px;
+    }
+
+    .panel-card {
+      padding: 16px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .section-title {
+      margin: 0 0 10px 0;
+      color: var(--dark-blue);
+      font-size: 1.25rem;
+    }
+
+    .board {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      min-height: 420px;
+      background:
+        radial-gradient(circle at center, rgba(255,255,255,0.95), rgba(238,247,255,0.95)),
+        linear-gradient(135deg, #f8fbff, #edf5ff);
+      border: 3px solid var(--blue);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .path-line {
+      position: absolute;
+      background: #b6d4fe;
+      border-radius: 999px;
+    }
+
+    .dot {
+      position: absolute;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: bold;
+      border: 3px solid var(--dark-blue);
+      background: #fff7cc;
+      color: #6b4f00;
+      padding: 6px;
+      transition: 0.2s ease;
+      z-index: 3;
+      user-select: none;
+    }
+
+    .dot.collected {
+      background: var(--light-green);
+      color: #14532d;
+      border-color: var(--green);
+      box-shadow: 0 0 0 5px rgba(47, 158, 68, 0.15);
+    }
+
+    .finish {
+      background: #ffe3e3;
+      color: #8a1c1c;
+      border-color: #c92a2a;
+    }
+
+    .finish.collected {
+      background: #d3f9d8;
+      color: #14532d;
+      border-color: var(--green);
+    }
+
+    .player {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--gold);
+      border: 4px solid #8a5b00;
+      z-index: 4;
+      transition: left 0.12s linear, top 0.12s linear;
+      box-shadow: 0 6px 14px rgba(245, 159, 0, 0.35);
+    }
+
+    .player::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #1f2933;
+      top: 10px;
+      right: 9px;
+    }
+
+    .start-label {
+      position: absolute;
+      left: 7%;
+      top: 7%;
+      background: white;
+      border: 2px solid var(--blue);
+      color: var(--dark-blue);
+      font-weight: bold;
+      border-radius: 999px;
+      padding: 6px 10px;
+      z-index: 2;
+    }
+
+    .controls {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 72px);
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .controls button,
+    .utility-buttons button {
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      padding: 12px;
+      cursor: pointer;
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 4px 10px rgba(28, 126, 214, 0.25);
+    }
+
+    .controls button:active,
+    .utility-buttons button:active {
+      transform: translateY(1px);
+    }
+
+    .controls .blank {
+      visibility: hidden;
+    }
+
+    .utility-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tip-box {
+      background: var(--light-blue);
+      border: 2px solid #b6d4fe;
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 220px;
+    }
+
+    .tip-day {
+      display: inline-block;
+      background: var(--blue);
+      color: white;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.92rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .tip-title {
+      margin: 0 0 10px 0;
+      color: var(--dark-blue);
+      font-size: 1.2rem;
+    }
+
+    .tip-text {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0 0 12px 0;
+    }
+
+    .tip-reminder {
+      font-size: 0.96rem;
+      font-weight: bold;
+      color: #2d3748;
+      background: white;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid #dbeafe;
+    }
+
+    .score-box {
+      margin-top: 14px;
+      background: #fffbea;
+      border: 2px solid #ffe08a;
+      border-radius: 12px;
+      padding: 12px;
+      font-weight: bold;
+      color: #7c5c00;
+      text-align: center;
+    }
+
+    .skills-list {
+      margin-top: 14px;
+      padding-left: 20px;
+      line-height: 1.55;
+    }
+
+    .skills-list li.done {
+      color: var(--green);
+      font-weight: bold;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      color: #52606d;
+      font-size: 0.95rem;
+    }
+
+    .win-banner {
+      margin-top: 14px;
+      background: linear-gradient(135deg, #e6fcf5, #d3f9d8);
+      border: 2px solid #69db7c;
+      border-radius: 14px;
+      padding: 14px;
+      color: #14532d;
+      font-weight: bold;
+      display: none;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .game-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 1.55rem;
+      }
+
+      .hero p,
+      .tip-text,
+      .tip-reminder,
+      .status-bar,
+      .score-box,
+      .skills-list {
+        font-size: 0.97rem;
+      }
+
+      .board {
+        min-height: 340px;
+      }
+
+      .dot {
+        width: 54px;
+        height: 54px;
+        font-size: 0.64rem;
+      }
+
+      .controls {
+        grid-template-columns: repeat(3, 64px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <h1>Day 8: Collect the Skills</h1>
+      <p>
+        Move through the path and collect each STAAR strategy from the previous days.
+        When you touch a skill, the reminder appears on the right.
+      </p>
+      <p><strong>Goal:</strong> collect all 7 skills, then reach the finish.</p>
+      <div class="status-bar" id="statusBar">Collected 0 of 7 skills.</div>
+    </div>
+
+    <div class="game-layout">
+      <div class="board-card">
+        <h2 class="section-title">Skill Path</h2>
+        <div class="board" id="board">
+          <div class="start-label">START</div>
+
+          <!-- Path lines -->
+          <div class="path-line" style="left: 8%; top: 12%; width: 74%; height: 16px;"></div>
+          <div class="path-line" style="left: 80%; top: 12%; width: 16px; height: 26%;"></div>
+          <div class="path-line" style="left: 18%; top: 38%; width: 64%; height: 16px;"></div>
+          <div class="path-line" style="left: 18%; top: 38%; width: 16px; height: 26%;"></div>
+          <div class="path-line" style="left: 18%; top: 64%; width: 64%; height: 16px;"></div>
+          <div class="path-line" style="left: 80%; top: 64%; width: 16px; height: 22%;"></div>
+          <div class="path-line" style="left: 34%; top: 86%; width: 48%; height: 16px;"></div>
+
+          <!-- Dots / skills -->
+          <div class="dot" id="dot1" data-day="1" style="left: 22%; top: 12%;">Day 1</div>
+          <div class="dot" id="dot2" data-day="2" style="left: 42%; top: 12%;">Day 2</div>
+          <div class="dot" id="dot3" data-day="3" style="left: 62%; top: 12%;">Day 3</div>
+          <div class="dot" id="dot4" data-day="4" style="left: 80%; top: 30%;">Day 4</div>
+          <div class="dot" id="dot5" data-day="5" style="left: 58%; top: 38%;">Day 5</div>
+          <div class="dot" id="dot6" data-day="6" style="left: 32%; top: 50%;">Day 6</div>
+          <div class="dot" id="dot7" data-day="7" style="left: 58%; top: 64%;">Day 7</div>
+          <div class="dot finish" id="finishDot" data-day="finish" style="left: 80%; top: 86%;">FINISH</div>
+
+          <!-- Player -->
+          <div class="player" id="player"></div>
+        </div>
+
+        <div class="controls">
+          <div class="blank"></div>
+          <button onclick="movePlayer('up')">▲</button>
+          <div class="blank"></div>
+          <button onclick="movePlayer('left')">◀</button>
+          <button onclick="resetGame()">⟳</button>
+          <button onclick="movePlayer('right')">▶</button>
+          <div class="blank"></div>
+          <button onclick="movePlayer('down')">▼</button>
+          <div class="blank"></div>
+        </div>
+
+        <div class="utility-buttons">
+          <button onclick="showCurrentHelp()">Show Last Skill</button>
+          <button onclick="collectNearbyHint()">Hint</button>
+        </div>
+
+        <div class="footer-note">
+          You can also use your keyboard arrow keys on desktop.
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <h2 class="section-title">Skill Reminder</h2>
+
+        <div class="tip-box">
+          <div class="tip-day" id="tipDay">Ready</div>
+          <h3 class="tip-title" id="tipTitle">Start moving and collect a skill.</h3>
+          <p class="tip-text" id="tipText">
+            This is a review day. Every time you touch a Day circle, that strategy will pop up here.
+          </p>
+          <div class="tip-reminder" id="tipReminder">
+            Try to remember which strategy has helped you the most so far.
+          </div>
+        </div>
+
+        <div class="score-box" id="scoreBox">0 / 7 skills collected</div>
+
+        <ul class="skills-list" id="skillsList">
+          <li id="list1">Day 1</li>
+          <li id="list2">Day 2</li>
+          <li id="list3">Day 3</li>
+          <li id="list4">Day 4</li>
+          <li id="list5">Day 5</li>
+          <li id="list6">Day 6</li>
+          <li id="list7">Day 7</li>
+        </ul>
+
+        <div class="win-banner" id="winBanner">
+          🎉 You collected all the skills and reached the finish!<br />
+          On the real test, you do not need just one trick — you need your whole toolbox.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*
+      ============================================
+      EASY EDIT SECTION
+      ============================================
+      If you want to change the review text later,
+      edit only the titles/text/reminder values below.
+    */
+    const tips = {
+      1: {
+        title: 'Read carefully before you rush',
+        text: 'Slow down just enough to notice what the question is really asking. Many wrong answers happen because students solve the wrong problem.',
+        reminder: 'Ask yourself: “What am I supposed to find?” before doing any math.'
+      },
+      2: {
+        title: 'Use tools and examples to make the problem clearer',
+        text: 'If a problem feels messy, organize it. Draw, label, use Desmos, or rewrite the important information so the math becomes easier to see.',
+        reminder: 'A clearer setup often matters more than being fast.'
+      },
+      3: {
+        title: 'Eliminate wrong answers first',
+        text: 'You do not always need to solve everything perfectly. Cross out answer choices that clearly do not fit. That raises your odds immediately.',
+        reminder: 'Even getting from 4 choices down to 2 is a big win.'
+      },
+      4: {
+        title: 'Plug in the answer choices',
+        text: 'When the question gives choices, use them. Test the options, especially on equations or situations where checking is faster than solving from scratch.',
+        reminder: 'Sometimes the answers help you solve the problem.'
+      },
+      5: {
+        title: 'Check for reasonableness',
+        text: 'Before you submit, ask whether your answer makes sense. Is it too big, too small, negative when it should be positive, or outside the graph or situation?',
+        reminder: 'A quick reasonableness check can catch easy mistakes.'
+      },
+      6: {
+        title: 'Stick with the problem and take one step',
+        text: 'If you feel stuck, do not shut down. Do one small thing: combine like terms, mark a value, graph a point, or write what you know. Motion creates clarity.',
+        reminder: 'You do not need the whole plan. You just need the next step.'
+      },
+      7: {
+        title: 'Use what you already know',
+        text: 'Look for familiar patterns: slope, intercepts, exponents, equations, tables, or graphs. A hard problem often hides a simpler skill you already practiced.',
+        reminder: 'New-looking problems are often old skills wearing a costume.'
+      },
+      finish: {
+        title: 'Full toolbox unlocked',
+        text: 'Great job. The goal is not to remember one trick — it is to have several strategies ready and choose the one that fits.',
+        reminder: 'On STAAR, flexible thinkers win more points.'
+      }
+    };
+
+    const positions = {
+      start: { x: 10, y: 12 },
+      1: { x: 22, y: 12 },
+      2: { x: 42, y: 12 },
+      3: { x: 62, y: 12 },
+      4: { x: 80, y: 30 },
+      5: { x: 58, y: 38 },
+      6: { x: 32, y: 50 },
+      7: { x: 58, y: 64 },
+      finish: { x: 80, y: 86 }
+    };
+
+    let playerPos = { ...positions.start };
+    let collected = new Set();
+    let lastShown = null;
+    let finished = false;
+
+    const player = document.getElementById('player');
+    const statusBar = document.getElementById('statusBar');
+    const scoreBox = document.getElementById('scoreBox');
+    const winBanner = document.getElementById('winBanner');
+    const tipDay = document.getElementById('tipDay');
+    const tipTitle = document.getElementById('tipTitle');
+    const tipText = document.getElementById('tipText');
+    const tipReminder = document.getElementById('tipReminder');
+
+    function renderPlayer() {
+      player.style.left = playerPos.x + '%';
+      player.style.top = playerPos.y + '%';
+    }
+
+    function updatePanel(key) {
+      const tip = tips[key];
+      tipDay.textContent = key === 'finish' ? 'Finish' : `Day ${key}`;
+      tipTitle.textContent = tip.title;
+      tipText.textContent = tip.text;
+      tipReminder.textContent = tip.reminder;
+      lastShown = key;
+    }
+
+    function updateProgress() {
+      const count = collected.size;
+      statusBar.textContent = `Collected ${count} of 7 skills.`;
+      scoreBox.textContent = `${count} / 7 skills collected`;
+    }
+
+    function collectSkill(day) {
+      if (!collected.has(day)) {
+        collected.add(day);
+        document.getElementById(`dot${day}`).classList.add('collected');
+        document.getElementById(`dot${day}`).innerHTML = `✔<br>Day ${day}`;
+        document.getElementById(`list${day}`).classList.add('done');
+        document.getElementById(`list${day}`).textContent = `✔ Day ${day}`;
+        updateProgress();
+      }
+      updatePanel(day);
+    }
+
+    function reachFinish() {
+      document.getElementById('finishDot').classList.add('collected');
+      updatePanel('finish');
+      if (collected.size === 7) {
+        finished = true;
+        winBanner.style.display = 'block';
+      } else {
+        tipDay.textContent = 'Finish';
+        tipTitle.textContent = 'Almost there';
+        tipText.textContent = 'You reached the finish, but some skills are still missing. Go back and collect all 7 first.';
+        tipReminder.textContent = 'Missing skills matter. Review them before you move on.';
+      }
+    }
+
+    function checkTouches() {
+      for (let day = 1; day <= 7; day++) {
+        const target = positions[day];
+        const dx = playerPos.x - target.x;
+        const dy = playerPos.y - target.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance <= 5) {
+          collectSkill(day);
+        }
+      }
+
+      const finishTarget = positions.finish;
+      const fdx = playerPos.x - finishTarget.x;
+      const fdy = playerPos.y - finishTarget.y;
+      const finishDistance = Math.sqrt(fdx * fdx + fdy * fdy);
+      if (finishDistance <= 5) {
+        reachFinish();
+      }
+    }
+
+    function movePlayer(direction) {
+      if (finished) return;
+
+      const step = 4;
+      if (direction === 'up') playerPos.y -= step;
+      if (direction === 'down') playerPos.y += step;
+      if (direction === 'left') playerPos.x -= step;
+      if (direction === 'right') playerPos.x += step;
+
+      playerPos.x = Math.max(4, Math.min(96, playerPos.x));
+      playerPos.y = Math.max(4, Math.min(96, playerPos.y));
+
+      renderPlayer();
+      checkTouches();
+    }
+
+    function resetGame() {
+      playerPos = { ...positions.start };
+      collected = new Set();
+      lastShown = null;
+      finished = false;
+      renderPlayer();
+
+      for (let day = 1; day <= 7; day++) {
+        document.getElementById(`dot${day}`).classList.remove('collected');
+        document.getElementById(`dot${day}`).textContent = `Day ${day}`;
+        document.getElementById(`list${day}`).classList.remove('done');
+        document.getElementById(`list${day}`).textContent = `Day ${day}`;
+      }
+
+      document.getElementById('finishDot').classList.remove('collected');
+      updateProgress();
+      winBanner.style.display = 'none';
+      tipDay.textContent = 'Ready';
+      tipTitle.textContent = 'Start moving and collect a skill.';
+      tipText.textContent = 'This is a review day. Every time you touch a Day circle, that strategy will pop up here.';
+      tipReminder.textContent = 'Try to remember which strategy has helped you the most so far.';
+    }
+
+    function showCurrentHelp() {
+      if (lastShown) {
+        updatePanel(lastShown);
+      } else {
+        tipDay.textContent = 'Hint';
+        tipTitle.textContent = 'No skill collected yet';
+        tipText.textContent = 'Move toward one of the Day circles to reveal a strategy reminder.';
+        tipReminder.textContent = 'The path starts near the top-left corner.';
+      }
+    }
+
+    function collectNearbyHint() {
+      const remaining = [];
+      for (let day = 1; day <= 7; day++) {
+        if (!collected.has(day)) remaining.push(day);
+      }
+
+      if (remaining.length === 0) {
+        tipDay.textContent = 'Hint';
+        tipTitle.textContent = 'All skills collected';
+        tipText.textContent = 'You already have all 7 skills. Head to the finish in the bottom-right area.';
+        tipReminder.textContent = 'Use the full toolbox on STAAR.';
+        return;
+      }
+
+      let nearestDay = remaining[0];
+      let nearestDistance = Infinity;
+
+      remaining.forEach(day => {
+        const dx = playerPos.x - positions[day].x;
+        const dy = playerPos.y - positions[day].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestDay = day;
+        }
+      });
+
+      tipDay.textContent = 'Hint';
+      tipTitle.textContent = `Try heading toward Day ${nearestDay}`;
+      tipText.textContent = `The nearest uncollected skill is Day ${nearestDay}. Move around until your character touches the circle.`;
+      tipReminder.textContent = 'On a real test, good hints help you get unstuck too.';
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        movePlayer('up');
+      }
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        movePlayer('down');
+      }
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        movePlayer('left');
+      }
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        movePlayer('right');
+      }
+    });
+
+    renderPlayer();
+    updateProgress();
+  </script>
+</body>
+</html>
