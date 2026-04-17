@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>STAAR Daily Tips - Day 9</title>
+  <style>
+    :root {
+      --blue: #1c7ed6;
+      --dark-blue: #0b3d91;
+      --light-blue: #eef7ff;
+      --green: #2f9e44;
+      --light-green: #eefbf3;
+      --gold: #f59f00;
+      --gray: #6c757d;
+      --light-gray: #f5f7fa;
+      --border: #d9e2ec;
+      --shadow: 0 8px 24px rgba(11, 61, 145, 0.12);
+      --red: #c92a2a;
+      --light-red: #fff5f5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(to bottom, #f8fbff, #edf5ff);
+      color: #1f2933;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .hero, .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      border: 3px solid var(--blue);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px 0;
+      color: var(--dark-blue);
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .hero p {
+      margin: 8px 0;
+      font-size: 1.05rem;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .directions {
+      background: var(--light-blue);
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      margin: 10px 0 12px 0;
+      border: 2px solid #b6d4fe;
+      color: #1f2933;
+    }
+
+    .desmos-box {
+      background: var(--light-green);
+      border: 2px solid #b7efc5;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      margin: 12px 0;
+    }
+
+    .desmos-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 10px 16px;
+      background: var(--green);
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .status-bar {
+      margin-top: 14px;
+      background: #fffbea;
+      border: 2px solid #ffe08a;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+      color: #7c5c00;
+    }
+
+    .question-card {
+      border: 2px solid var(--border);
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .question-number {
+      display: inline-block;
+      background: var(--blue);
+      color: white;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.92rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .question-title {
+      margin: 0 0 10px 0;
+      color: var(--dark-blue);
+      font-size: 1.2rem;
+    }
+
+    .problem-box {
+      background: #f8fbff;
+      border: 2px solid #d0e3ff;
+      border-radius: 14px;
+      padding: 14px;
+      margin: 12px 0 14px 0;
+      font-size: 1.15rem;
+      line-height: 1.5;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .question-prompt {
+      margin: 0 0 12px 0;
+      font-weight: bold;
+      color: #334e68;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      text-align: left;
+      border: 2px solid #cbd5e1;
+      background: white;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.15s ease;
+    }
+
+    .choice-btn:hover:not(:disabled) {
+      border-color: var(--blue);
+      background: #f8fbff;
+    }
+
+    .choice-btn:disabled {
+      cursor: default;
+      opacity: 1;
+    }
+
+    .choice-btn.correct {
+      background: var(--light-green);
+      border-color: var(--green);
+      color: #14532d;
+      font-weight: bold;
+    }
+
+    .choice-btn.incorrect {
+      background: var(--light-red);
+      border-color: var(--red);
+      color: #8a1c1c;
+      font-weight: bold;
+    }
+
+    .feedback {
+      margin-top: 12px;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.correct {
+      background: var(--light-green);
+      border: 2px solid #b7efc5;
+      color: #14532d;
+    }
+
+    .feedback.incorrect {
+      background: var(--light-red);
+      border: 2px solid #ffc9c9;
+      color: #8a1c1c;
+    }
+
+    .summary-card {
+      border: 2px solid var(--border);
+      padding: 18px;
+    }
+
+    .summary-title {
+      margin: 0 0 10px 0;
+      color: var(--dark-blue);
+      font-size: 1.3rem;
+    }
+
+    .summary-box {
+      background: var(--light-blue);
+      border: 2px solid #b6d4fe;
+      border-radius: 14px;
+      padding: 14px;
+      line-height: 1.55;
+    }
+
+    .complete-banner {
+      margin-top: 14px;
+      background: linear-gradient(135deg, #e6fcf5, #d3f9d8);
+      border: 2px solid #69db7c;
+      border-radius: 14px;
+      padding: 14px;
+      color: #14532d;
+      font-weight: bold;
+      display: none;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.55rem; }
+      .hero p,
+      .directions,
+      .desmos-box,
+      .status-bar,
+      .problem-box,
+      .choice-btn,
+      .feedback,
+      .summary-box { font-size: 0.97rem; }
+      .problem-box { font-size: 1.02rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <h1>Day 9: Choose the Right Tool</h1>
+      <div class="directions">
+        Read each problem and choose the <strong>best strategy to start with</strong>.<br>
+        You do not always need to solve everything first &mdash; sometimes the smartest first move saves time.
+      </div>
+      <div class="desmos-box">
+        <strong>Desmos is a strategy too.</strong><br>
+        On some STAAR problems, graphing or checking in Desmos is the smartest way to begin.
+        <br>
+        <a class="desmos-btn" href="https://www.desmos.com/testing/texas/graphing" target="_blank" rel="noopener">🧮 Open Desmos Texas Calculator</a>
+      </div>
+      <p><strong>Today is different:</strong> this time, you are not solving the whole problem. You are choosing the best first move.</p>
+      <div class="status-bar" id="statusBar">0 of 4 strategy choices answered.</div>
+    </div>
+
+    <div class="card question-card">
+      <div class="question-number">Question 1</div>
+      <h2 class="question-title">Start by making the equation easier.</h2>
+      <div class="problem-box">3(x + 4) = 21</div>
+      <p class="question-prompt">What is the <strong>best strategy to start with</strong>?</p>
+      <div class="choices" data-question="q1">
+        <button class="choice-btn" data-correct="false">A) Multiply out the parentheses first</button>
+        <button class="choice-btn" data-correct="true">B) Divide both sides by 3 first</button>
+        <button class="choice-btn" data-correct="false">C) Use Desmos before simplifying</button>
+        <button class="choice-btn" data-correct="false">D) Guess and check random values</button>
+      </div>
+      <div class="feedback" id="q1-feedback"></div>
+    </div>
+
+    <div class="card question-card">
+      <div class="question-number">Question 2</div>
+      <h2 class="question-title">Use the answer choices to help you.</h2>
+      <div class="problem-box">Which value of x makes this true?<br>2x + 5 = 17<br><br>A) 5 &nbsp;&nbsp; B) 6 &nbsp;&nbsp; C) 7 &nbsp;&nbsp; D) 8</div>
+      <p class="question-prompt">What is the <strong>best strategy to start with</strong>?</p>
+      <div class="choices" data-question="q2">
+        <button class="choice-btn" data-correct="false">A) Estimate without using the choices</button>
+        <button class="choice-btn" data-correct="true">B) Plug in the answer choices</button>
+        <button class="choice-btn" data-correct="false">C) Use Desmos to graph it before checking the choices</button>
+        <button class="choice-btn" data-correct="false">D) Eliminate the largest answer only and guess</button>
+      </div>
+      <div class="feedback" id="q2-feedback"></div>
+    </div>
+
+    <div class="card question-card">
+      <div class="question-number">Question 3</div>
+      <h2 class="question-title">Sometimes Desmos really is the best first move.</h2>
+      <div class="problem-box">Which method is BEST for solving this system?<br><br>y = 2x + 3<br>y = x + 7</div>
+      <p class="question-prompt">What is the <strong>best strategy to start with</strong>?</p>
+      <div class="choices" data-question="q3">
+        <button class="choice-btn" data-correct="false">A) Guess intersection points in your head</button>
+        <button class="choice-btn" data-correct="false">B) Make a long table of values first</button>
+        <button class="choice-btn" data-correct="true">C) Use Desmos to graph both equations and find the intersection</button>
+        <button class="choice-btn" data-correct="false">D) Skip graphing because calculators are only for checking</button>
+      </div>
+      <div class="feedback" id="q3-feedback"></div>
+    </div>
+
+    <div class="card question-card">
+      <div class="question-number">Question 4</div>
+      <h2 class="question-title">Check whether the answer makes sense.</h2>
+      <div class="problem-box">A student solves a distance problem and gets an answer of <strong>-12 miles</strong>.</div>
+      <p class="question-prompt">What is the <strong>best strategy to start with</strong>?</p>
+      <div class="choices" data-question="q4">
+        <button class="choice-btn" data-correct="false">A) Keep the answer because negatives are allowed in every situation</button>
+        <button class="choice-btn" data-correct="true">B) Check for reasonableness before accepting the answer</button>
+        <button class="choice-btn" data-correct="false">C) Turn the answer into -120 to make it more realistic</button>
+        <button class="choice-btn" data-correct="false">D) Ignore the unit and move on</button>
+      </div>
+      <div class="feedback" id="q4-feedback"></div>
+    </div>
+
+    <div class="card summary-card">
+      <h2 class="summary-title">Why this matters</h2>
+      <div class="summary-box">
+        On STAAR, strong students do more than just calculate. They recognize the kind of problem they are looking at and pick a smart way to begin. That saves time, reduces mistakes, and makes hard problems feel more manageable. Sometimes that smart move is algebra, sometimes it is plugging in choices, and sometimes it is opening Desmos.
+      </div>
+      <div class="complete-banner" id="completeBanner">
+        🎉 Nice work! You finished Day 9.<br>
+        The best students do not just know strategies &mdash; they know <strong>when to use them</strong>.<br>
+        <strong>Do not forget: Desmos is one of your strongest STAAR tools.</strong>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const feedbackContent = {
+      q1: {
+        correct: '✔ Good choice. Dividing both sides by 3 first makes the equation smaller and easier before doing more steps.',
+        incorrect: 'Not the best first move here. Since both sides can be divided by 3 right away, that is the quickest way to simplify before solving.'
+      },
+      q2: {
+        correct: '✔ Good choice. When the answers are given, testing the choices can be faster than solving from scratch.',
+        incorrect: 'A faster move is to use the answer choices you already have. On multiple choice, the answers can help you work backward.'
+      },
+      q3: {
+        correct: '✔ Good choice. This is a perfect moment for Desmos. Graph both lines and the intersection gives the solution quickly.',
+        incorrect: 'This is one of those times when Desmos is the smartest tool. Graphing both equations shows the intersection much faster.'
+      },
+      q4: {
+        correct: '✔ Good choice. A distance of -12 miles usually does not make sense in context, so reasonableness is the first check.',
+        incorrect: 'Before trusting the answer, ask whether it makes sense in the situation. A negative distance is a clue to stop and re-check.'
+      }
+    };
+
+    let answeredCount = 0;
+    const answered = new Set();
+
+    function updateStatus() {
+      const statusBar = document.getElementById('statusBar');
+      statusBar.textContent = `${answeredCount} of 4 strategy choices answered.`;
+      if (answeredCount === 4) {
+        document.getElementById('completeBanner').style.display = 'block';
+      }
+    }
+
+    document.querySelectorAll('.choices').forEach(group => {
+      const qKey = group.dataset.question;
+      const buttons = group.querySelectorAll('.choice-btn');
+      const feedback = document.getElementById(`${qKey}-feedback`);
+
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          if (answered.has(qKey)) return;
+
+          const isCorrect = button.dataset.correct === 'true';
+          answered.add(qKey);
+          answeredCount++;
+
+          buttons.forEach(btn => {
+            btn.disabled = true;
+            const btnCorrect = btn.dataset.correct === 'true';
+            if (btnCorrect) {
+              btn.classList.add('correct');
+            }
+          });
+
+          if (!isCorrect) {
+            button.classList.add('incorrect');
+            feedback.className = 'feedback incorrect show';
+            feedback.innerHTML = feedbackContent[qKey].incorrect;
+          } else {
+            button.classList.add('correct');
+            feedback.className = 'feedback correct show';
+            feedback.innerHTML = feedbackContent[qKey].correct;
+          }
+
+          updateStatus();
+        });
+      });
+    });
+  </script>
+</body>
+</html>
